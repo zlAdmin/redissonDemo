@@ -1,0 +1,13 @@
+server:
+    port: 8085
+spring:
+  redis:
+    host: 10.8.3.111
+    port: 6379
+    password: 1234567
+    jedis:
+      pool:
+        max-active: 500
+        max-idle: 1000
+        max-wait: 6000ms
+        min-idle: 4
