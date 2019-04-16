@@ -1,8 +1,6 @@
 package com.zl.service.impl;
 import com.zl.service.DistributedLocker;
-import org.redisson.api.RCountDownLatch;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
@@ -70,5 +68,36 @@ public class DistributedLockerImpl implements DistributedLocker {
     public RCountDownLatch countDownLatch(String key) {
         RCountDownLatch countDownLatch = redissonClient.getCountDownLatch(key);
         return countDownLatch;
+    }
+
+    @Override
+    public RAtomicLong getAtomicLong(String key) {
+        RAtomicLong atomicLong = redissonClient.getAtomicLong(key);
+        return atomicLong;
+    }
+
+    @Override
+    public RFuture<Boolean> compareAndSetAsync(String key, Long oldValue, Long newValue) {
+        RAtomicLong atomicLong = redissonClient.getAtomicLong(key);
+        RFuture<Boolean> rFuture = atomicLong.compareAndSetAsync(oldValue, newValue);
+        return rFuture;
+    }
+
+    @Override
+    public RBloomFilter<String> getBloomFilter(String key) {
+        RBloomFilter<String> bloomFilter = redissonClient.getBloomFilter(key);
+        //初始化布隆过滤器 容量是5500000L，期望误差率为0.03
+        //bloomFilter.tryInit(55000000L, 0.03);
+        return bloomFilter;
+    }
+
+    @Override
+    public void LongAdderAdd(String key) {
+        RLongAdder longAdder = redissonClient.getLongAdder(key);
+        longAdder.increment();
+        //longAdder.decrement();
+        //longAdder.destroy(); 销毁
+
+        RBatch batch = redissonClient.createBatch();
     }
 }

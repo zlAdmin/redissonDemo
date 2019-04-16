@@ -1,7 +1,6 @@
 package com.zl.service;
 
-import org.redisson.api.RCountDownLatch;
-import org.redisson.api.RLock;
+import org.redisson.api.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,4 +27,20 @@ public interface DistributedLocker {
     void unlock(RLock lock);
 
     RCountDownLatch countDownLatch(String key);
+
+    RAtomicLong getAtomicLong(String key);
+
+    RFuture<Boolean> compareAndSetAsync(String key, Long oldValue, Long newValue);
+
+    RBloomFilter<String> getBloomFilter(String key);
+    
+    /**
+     * @Description 长整型加   速度比分布式AtomicLong快1200倍
+     * @return void
+     * @throws 
+     * @Author zhanglei
+     * @Date 14:50 2019/4/16
+     * @Param [key]
+     **/
+    void LongAdderAdd(String key);
 }
