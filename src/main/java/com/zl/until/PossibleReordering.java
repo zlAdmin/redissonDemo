@@ -29,7 +29,7 @@ public class PossibleReordering {
         });
 
         one.start(); other.start();
-        one.join(); one.join();
+        one.join(); other.join();
         System.out.println("(" + x + "," + y + ")");
     }
 }
